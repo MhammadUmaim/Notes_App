@@ -1,0 +1,37 @@
+@import "tailwindcss";
+/* Dark Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;              /* Scrollbar width */
+}
+
+::-webkit-scrollbar-track {
+  /* background: #111;         Track background */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  /* background: #444;         Scroll thumb color */
+  border-radius: 10px;
+  /* border: 2px solid #111;   Adds space around thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #666;          /* Hover effect */
+}
+
+/* Hide scrollbars for card containers but keep scroll functionality */
+.cards,
+.cards .overflow-auto {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.cards::-webkit-scrollbar,
+.cards .overflow-auto::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;        /* auto | thin */
+  scrollbar-color: #444 #111;   /* thumb | track */
+}
