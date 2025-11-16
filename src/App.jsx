@@ -32,14 +32,14 @@ const App = () => {
 
   return (
 
-    <div className='xs:h-auto sm:h-screen sm:flex justify-between bg-black text-white p-5'>
+    <div className='min-h-screen p-4 sm:flex justify-between bg-black text-white sm:p-5'>
 
-      <form onSubmit={handleSubmit} className='flex flex-col gap-4 p-5 sm:w-1/2 '>
+      <form onSubmit={handleSubmit} className='flex flex-col gap-4 sm:p-5 sm:w-1/2 '>
         <h1 className='text-center text-4xl font-extralight'>Add Notes</h1>
 
         {/* first input for heading */}
         <input
-          className='border border-gray-300 rounded-md p-4 w-full outline-none text-2xl capitalize'
+          className='border border-gray-300 rounded-md p-4 w-full outline-none text-2xl capitalize focus:border-2 '
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -48,7 +48,7 @@ const App = () => {
 
         {/* Second input for content */}
         <textarea
-          className='border border-gray-300 rounded-md p-5 w-full outline-none h-32'
+          className='border border-gray-300 rounded-md p-5 w-full outline-none h-32 focus:border-2 '
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Enter Note Content">
@@ -73,7 +73,7 @@ const App = () => {
                 deleteNote(index)
               }} className='absolute top-8 right-6 bg-red-700 text-white p-1.5 rounded-full cursor-pointer'><X size={18} strokeWidth={2} /> </h2>
               <h3 className='text-2xl font-bold leading-tight capitalize'>{e.title}</h3>
-              <p className='whitespace-pre-wrap font-medium text-sm leading-7 text-gray-700'>{e.text}</p>
+              <p className='whitespace-pre-wrap font-medium  leading-7 text-gray-700'>{e.text}</p>
             </div>
           })}
 
