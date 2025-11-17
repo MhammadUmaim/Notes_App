@@ -4,7 +4,7 @@ import Alert from '@mui/material/Alert';
 export default function CustomizedSnackbars(props) {
   return (
     <div>
-      <Snackbar open={props.visibility} autoHideDuration={3000} >
+      <Snackbar open={props.visibility} autoHideDuration={3000} className=' sm:w-[30vw] w-[90vw] position-fixed transform z-50'>
         <Alert
           severity="error"
           variant="filled"
