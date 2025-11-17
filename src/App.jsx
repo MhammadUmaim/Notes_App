@@ -65,19 +65,45 @@ if (title.length > 10 || title.length < 3 || text.length > 50 || text.length < 5
         <h1 className='text-center text-4xl font-extralight'>Add Notes</h1>
       
         {/* first input for heading */}
-        <input
+        <input 
+          
           className='border border-gray-300 rounded-md p-4 w-full outline-none text-2xl capitalize focus:border-2 '
           type="text"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => {
+            if (e.target.value.length < 1) {
+              e.target.style.border = "2px solid red";
+            } 
+            else if (e.target.value.length > 10) {
+              e.target.style.border = "2px solid orange";
+            }
+            else {
+              e.target.style.border = "2px solid white";
+            }
+            setTitle(e.target.value)
+
+          }}
           placeholder="Enter Note Title"
         />
 
         {/* Second input for content */}
         <textarea
+          
           className='border border-gray-300 rounded-md p-5 w-full outline-none h-32 focus:border-2 '
           value={text}
-          onChange={(e) => setText(e.target.value)}
+          onChange={(e) => {
+            if (e.target.value.length < 1) {
+              e.target.style.border = "2px solid red";
+            } 
+            else if (e.target.value.length > 50) {
+              e.target.style.border = "2px solid orange";
+            }
+            else {
+              e.target.style.border = "2px solid white";
+            }
+            setText(e.target.value)
+          }}
+          
           placeholder="Enter Note Content">
         </textarea>
 

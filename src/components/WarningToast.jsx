@@ -10,6 +10,7 @@ export default function CustomizedSnackbars(props) {
           variant="filled"
           sx={{ width: '100%' , bgcolor: 'orange' }}
         >
+          
           Title must be 3-10 characters and Text must be 5-50 characters long
         </Alert>
       </Snackbar>
