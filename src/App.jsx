@@ -2,9 +2,13 @@ import { useState } from 'react'
 import { X } from 'lucide-react';
 import Toast from './components/Toast.jsx';
 import ErrorToast from './components/ErrorToast.jsx'
+import DeleteToast from './components/DeleteToast.jsx'
 import WarningToast from './components/WarningToast.jsx'
 
+
+
 const App = () => {
+
 
 
   const [title, setTitle] = useState("")
@@ -12,6 +16,7 @@ const App = () => {
   const [task, setTask] = useState([])
   const [toastVisibility, setToastVisibility] = useState(false);
   const [errorToastVisibility, setErrorToastVisibility] = useState(false);
+  const [deleteToastVisibility, setDeleteToastVisibility] = useState(false);
   const [warningToastVisibility, setWarningToastVisibility] = useState(false);
 
   const handleSubmit = (e) => {
@@ -35,7 +40,7 @@ const App = () => {
       return;
     }
 
-if (title.length > 10 || title.length < 3 || text.length > 50 || text.length < 5) {
+    if (title.length > 10 || title.length < 3 || text.length > 50 || text.length < 5) {
       setWarningToastVisibility(true);
       setTimeout(() => {
         setWarningToastVisibility(false);
@@ -61,19 +66,20 @@ if (title.length > 10 || title.length < 3 || text.length > 50 || text.length < 5
       <Toast visibility={toastVisibility} />
       <ErrorToast visibility={errorToastVisibility} />
       <WarningToast visibility={warningToastVisibility} />
+      <DeleteToast visibility={deleteToastVisibility} />
       <form onSubmit={handleSubmit} className='flex flex-col gap-4 sm:p-5 sm:w-1/2 '>
         <h1 className='text-center text-4xl font-extralight'>Add Notes</h1>
-      
+
         {/* first input for heading */}
-        <input 
-          
+        <input
+
           className='border border-gray-300 rounded-md p-4 w-full outline-none text-2xl capitalize focus:border-2 '
           type="text"
           value={title}
           onChange={(e) => {
             if (e.target.value.length < 1) {
               e.target.style.border = "2px solid red";
-            } 
+            }
             else if (e.target.value.length > 10) {
               e.target.style.border = "2px solid orange";
             }
@@ -88,13 +94,13 @@ if (title.length > 10 || title.length < 3 || text.length > 50 || text.length < 5
 
         {/* Second input for content */}
         <textarea
-          
+
           className='border border-gray-300 rounded-md p-5 w-full outline-none h-32 focus:border-2 '
           value={text}
           onChange={(e) => {
             if (e.target.value.length < 1) {
               e.target.style.border = "2px solid red";
-            } 
+            }
             else if (e.target.value.length > 50) {
               e.target.style.border = "2px solid orange";
             }
@@ -103,7 +109,7 @@ if (title.length > 10 || title.length < 3 || text.length > 50 || text.length < 5
             }
             setText(e.target.value)
           }}
-          
+
           placeholder="Enter Note Content">
         </textarea>
 
@@ -126,7 +132,17 @@ if (title.length > 10 || title.length < 3 || text.length > 50 || text.length < 5
             bg-cover text-black flex flex-col wrap-break-word h-80 overflow-auto '>
 
               <h2 onClick={() => {
-                deleteNote(index)
+                let confirmation = confirm('Are you sure you want to delete this note?');
+                if (confirmation === true) {
+                  deleteNote(index)
+                  setDeleteToastVisibility(true);
+                  setTimeout(() => {
+                    setDeleteToastVisibility(false);
+                  }, 3000);
+                  return;
+                }
+                return;
+
               }}
                 className='absolute top-8 right-6 bg-red-700 text-white p-1.5 rounded-full cursor-pointer'><X size={18} strokeWidth={2} /></h2>
               <h3 className='text-2xl font-bold leading-tight capitalize'>{e.title}</h3>
