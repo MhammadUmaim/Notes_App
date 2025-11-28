@@ -1,39 +1,54 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { X } from 'lucide-react';
 import Toast from './components/Toast.jsx';
 import ErrorToast from './components/ErrorToast.jsx'
 import DeleteToast from './components/DeleteToast.jsx'
 import WarningToast from './components/WarningToast.jsx'
 
-
-
 const App = () => {
 
-
-
+  // notes states
   const [title, setTitle] = useState("")
   const [text, setText] = useState("")
-  const [task, setTask] = useState([])
+  const [task, setTask] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('note') || '[]')
+    } catch (e) {
+      console.error('Failed to parse saved notes:', e)
+      return []
+    }
+  })
+
+  // All Toasts
   const [toastVisibility, setToastVisibility] = useState(false);
   const [errorToastVisibility, setErrorToastVisibility] = useState(false);
   const [deleteToastVisibility, setDeleteToastVisibility] = useState(false);
   const [warningToastVisibility, setWarningToastVisibility] = useState(false);
 
+  // Date & Time 
+  let date = new Date();
+  let month = date.getMonth() + 1;
+  let Name = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"][date.getDay()];
+  let year = date.getFullYear();
+  let hours = date.getHours()
+  let mins = date.getMinutes()
+  if (hours > 12) { mins = mins + ' pm'}
+  let time = `${hours}:${mins}`
+  let currentDate = `${month}/${Name}/${year} -${time}`;
+
+  // Save notes to localStorage whenever task state changes
+  useEffect(() => {
+    localStorage.setItem('note', JSON.stringify(task))
+  }, [task])
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const copyTask = [...task];
 
-    if (title != '' && text != '') {
-      copyTask.push({ title: title, text: text })
-      setToastVisibility(true);
-      setTimeout(() => {
-        setToastVisibility(false);
-      }, 3000);
-      setTask(copyTask);
-    }
-
+    // Validate inputs first
     if (title == '' || text == '') {
       setErrorToastVisibility(true);
+      setTitle("");
+      setText("");
       setTimeout(() => {
         setErrorToastVisibility(false);
       }, 3000);
@@ -42,14 +57,25 @@ const App = () => {
 
     if (title.length > 10 || title.length < 3 || text.length > 50 || text.length < 5) {
       setWarningToastVisibility(true);
+      setTitle("");
+      setText("");
       setTimeout(() => {
         setWarningToastVisibility(false);
       }, 3000);
       return;
     }
+
+    // If validation passes, add the note
+    const copyTask = [...task];
+    copyTask.push({ title: title, text: text })
+    setTask(copyTask);
+
+    setToastVisibility(true);
     setTitle("");
     setText("");
-
+    setTimeout(() => {
+      setToastVisibility(false);
+    }, 3000);
   };
 
 
@@ -57,22 +83,24 @@ const App = () => {
     const copyTask = [...task];
     copyTask.splice(idx, 1)
     setTask(copyTask)
+    // localStorage is updated automatically by the useEffect watching task
   }
 
 
   return (
-
+  
     <div className='min-h-screen p-4 sm:flex justify-between bg-black text-white sm:p-5'>
+      {/* Toasts */}
       <Toast visibility={toastVisibility} />
       <ErrorToast visibility={errorToastVisibility} />
       <WarningToast visibility={warningToastVisibility} />
       <DeleteToast visibility={deleteToastVisibility} />
+
       <form onSubmit={handleSubmit} className='flex flex-col gap-4 sm:p-5 sm:w-1/2 '>
         <h1 className='text-center text-4xl font-extralight'>Add Notes</h1>
 
         {/* first input for heading */}
         <input
-
           className='border border-gray-300 rounded-md p-4 w-full outline-none text-2xl capitalize focus:border-2 '
           type="text"
           value={title}
@@ -87,14 +115,12 @@ const App = () => {
               e.target.style.border = "2px solid white";
             }
             setTitle(e.target.value)
-
           }}
           placeholder="Enter Note Title"
         />
 
         {/* Second input for content */}
         <textarea
-
           className='border border-gray-300 rounded-md p-5 w-full outline-none h-32 focus:border-2 '
           value={text}
           onChange={(e) => {
@@ -145,6 +171,7 @@ const App = () => {
 
               }}
                 className='absolute top-8 right-6 bg-red-700 text-white p-1.5 rounded-full cursor-pointer'><X size={18} strokeWidth={2} /></h2>
+              <p>{currentDate}</p>
               <h3 className='text-2xl font-bold leading-tight capitalize'>{e.title}</h3>
               <p className='whitespace-pre-wrap font-medium  leading-7 text-gray-700'>{e.text}</p>
             </div>
